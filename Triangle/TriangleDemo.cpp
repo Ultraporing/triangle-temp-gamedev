@@ -112,4 +112,18 @@ void TriangleDemo::Update(float dt)
 
 void TriangleDemo::Render()
 {
+	if (d3dContext_ == 0)
+		return;
+	float clearColor[4] = { 0.5, 0.5f, 0.5f, 1.0f };
+	//Set the background color 
+	d3dContext_->ClearRenderTargetView(backBufferTarget_, clearColor);
+	unsigned int stride = sizeof(VertexPos);
+	unsigned int offset = 0;
+	d3dContext_->IASetInputLayout(inputLayout_);
+	d3dContext_->IASetVertexBuffers(0, 1, &vertexBuffer_, &stride, &offset);
+	d3dContext_->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	d3dContext_->VSSetShader(solidColorVS_, 0, 0);
+	d3dContext_->PSSetShader(solidColorPS_, 0, 0);
+	d3dContext_->Draw(3, 0);
+	swapChain_->Present(0, 0);
 }
